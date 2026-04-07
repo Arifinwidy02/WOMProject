@@ -7,7 +7,6 @@ import {
 import { AuthContextType, UserData, userLoginData } from '../types/auth';
 import { useQueryClient } from '@tanstack/react-query';
 
-// Dari undefined menjadi object cast
 export const AuthContext = createContext<AuthContextType>(
   {} as AuthContextType,
 );
@@ -49,10 +48,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = async () => {
     try {
+      queryClient.clear();
       await clearUserSession();
       setUserToken(null);
       setUserEmail(null);
-      queryClient.clear();
     } catch (error) {
       console.error('Error during logout:', error);
     } finally {

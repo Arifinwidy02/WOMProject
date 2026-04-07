@@ -1,18 +1,24 @@
-import React, { useContext, useEffect } from 'react';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import React, { useContext } from 'react';
 import {
-  View,
-  StyleSheet,
   ActivityIndicator,
   FlatList,
   RefreshControl,
+  View,
 } from 'react-native';
-import { Avatar, Button, List, Text } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
+import { fetchUsers } from '../../api/userApi';
+import { UserCard } from '../../components/UserCard';
 import { AuthContext } from '../../context/AuthContext';
-import { fetchUsers, User } from '../../api/userApi';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import { FetchUserType } from '../../types/fetchUser';
+import { RootStackParamList } from '../../types/navigation';
 
-export const HomeScreen = () => {
+interface Props {
+  navigation: StackNavigationProp<RootStackParamList, 'Home'>;
+}
+
+export const HomeScreen = ({ navigation }: Props) => {
   const { userEmail } = useContext(AuthContext);
   const {
     data: users,
@@ -33,23 +39,12 @@ export const HomeScreen = () => {
 
   const allUsers = users?.pages.flatMap(page => page.users) || [];
 
-  const renderItem = (item: { item: User }) => {
+  const renderItem = (item: { item: FetchUserType }) => {
     const user = item.item;
     return (
-      <List.Item
-        title={`${user.firstName} ${user.lastName}`}
-        description={user.email}
-        left={props => (
-          <Avatar.Image {...props} size={50} source={{ uri: user.image }} />
-        )}
-        right={props => <List.Icon {...props} icon="chevron-right" />}
-        style={{
-          borderWidth: 1,
-          borderColor: '#ccc',
-          marginBottom: 10,
-          borderRadius: 5,
-        }}
-        onPress={() => console.log('press bro', user.id)}
+      <UserCard
+        user={user}
+        onPress={() => navigation.navigate('Detail', { user: user })}
       />
     );
   };

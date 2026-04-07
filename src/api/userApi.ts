@@ -1,16 +1,9 @@
 import axios from 'axios';
-
-export interface User {
-  id: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-  image: string;
-}
+import { FetchUserType } from '../types/fetchUser';
 
 export const fetchUsers = async ({
   pageParam = 0,
-}): Promise<{ users: User[]; nextCursor?: number }> => {
+}): Promise<{ users: FetchUserType[]; nextCursor?: number }> => {
   const limit = 10;
   try {
     const response = await axios.get(

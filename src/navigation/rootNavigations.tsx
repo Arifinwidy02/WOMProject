@@ -5,6 +5,7 @@ import LoginScreen from '../screens/Login/LoginScreen';
 import { AuthContext } from '../context/AuthContext';
 import { ActivityIndicator, View } from 'react-native';
 import { Icon, IconButton } from 'react-native-paper';
+import { DetailScreen } from '../screens/Detail/DetailScreen';
 
 const Stack = createStackNavigator();
 
@@ -22,22 +23,25 @@ export const RootNavigator = () => {
   return (
     <Stack.Navigator>
       {isLoggedIn ? (
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{
-            headerRight: () => {
-              return (
-                <IconButton
-                  icon="logout"
-                  iconColor="red"
-                  size={24}
-                  onPress={logout}
-                />
-              );
-            },
-          }}
-        />
+        <>
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{
+              headerRight: () => {
+                return (
+                  <IconButton
+                    icon="logout"
+                    iconColor="red"
+                    size={24}
+                    onPress={logout}
+                  />
+                );
+              },
+            }}
+          />
+          <Stack.Screen name="Detail" component={DetailScreen} />
+        </>
       ) : (
         <Stack.Screen name="Login" component={LoginScreen} />
       )}
