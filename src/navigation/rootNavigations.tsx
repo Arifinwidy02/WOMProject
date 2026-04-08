@@ -4,7 +4,7 @@ import { HomeScreen } from '../screens/Home/HomeScreen';
 import LoginScreen from '../screens/Login/LoginScreen';
 import { AuthContext } from '../context/AuthContext';
 import { ActivityIndicator, View } from 'react-native';
-import { Icon, IconButton } from 'react-native-paper';
+import { IconButton, useTheme } from 'react-native-paper';
 import { DetailScreen } from '../screens/Detail/DetailScreen';
 
 const Stack = createStackNavigator();
@@ -12,7 +12,7 @@ const Stack = createStackNavigator();
 export const RootNavigator = () => {
   const { userToken, isLoading, logout } = useContext(AuthContext);
   const isLoggedIn = !!userToken;
-
+  const theme = useTheme();
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -21,7 +21,20 @@ export const RootNavigator = () => {
     );
   }
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerTintColor: theme.colors.primary,
+        headerStyle: {
+          backgroundColor: theme.colors.surface,
+          elevation: 2,
+          shadowOpacity: 0.1,
+        },
+        headerTitleStyle: {
+          fontWeight: 'bold',
+          color: theme.colors.onSurface,
+        },
+      }}
+    >
       {isLoggedIn ? (
         <>
           <Stack.Screen
@@ -31,8 +44,8 @@ export const RootNavigator = () => {
               headerRight: () => {
                 return (
                   <IconButton
-                    icon="logout"
-                    iconColor="red"
+                    icon="logout-variant"
+                    iconColor={theme.dark ? '#F2B8B5' : '#B3261E'}
                     size={24}
                     onPress={logout}
                   />
@@ -43,7 +56,11 @@ export const RootNavigator = () => {
           <Stack.Screen name="Detail" component={DetailScreen} />
         </>
       ) : (
-        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
       )}
     </Stack.Navigator>
   );

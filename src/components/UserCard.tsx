@@ -16,7 +16,7 @@ export const UserCard = ({ user, isDetail, onPress }: UserCardProps) => {
       style={{
         marginHorizontal: 16,
         marginVertical: 8,
-        backgroundColor: isDetail ? 'transparent' : '#fff',
+        backgroundColor: '#fff',
         marginTop: isDetail ? 20 : 8,
         elevation: isDetail ? 0 : 1,
       }}

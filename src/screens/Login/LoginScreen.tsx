@@ -9,17 +9,15 @@ import { yupResolver } from '@hookform/resolvers/yup';
 const LoginScreen = () => {
   const { signIn, isLoading } = useContext(AuthContext);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-  const [userInputLogin, setUserInputLogin] = useState({
-    email: '',
-    password: '',
-  });
 
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<loginFormValues>({
     resolver: yupResolver(loginSchema),
+    mode: 'onTouched',
+    reValidateMode: 'onChange',
     defaultValues: {
       email: '',
       password: '',
@@ -54,12 +52,14 @@ const LoginScreen = () => {
             onChangeText={onChange}
             error={!!errors.email}
             autoCapitalize="none"
-            style={{ ...(!errors.email && { marginBottom: 12 }) }}
+            style={{ marginBottom: 12 }}
           />
         )}
       />
       {errors.email && (
-        <Text style={{ color: 'red' }}>{errors.email.message}</Text>
+        <View style={{ height: 20, marginBottom: 12 }}>
+          <Text style={{ color: 'red' }}>{errors.email.message}</Text>
+        </View>
       )}
 
       <Controller
@@ -77,7 +77,7 @@ const LoginScreen = () => {
             secureTextEntry={secureTextEntry}
             right={
               <TextInput.Icon
-                icon={secureTextEntry ? 'eye-off' : 'eye'}
+                icon={secureTextEntry ? 'eye' : 'eye-off'}
                 onPress={() => setSecureTextEntry(prev => !prev)}
               />
             }
@@ -92,7 +92,7 @@ const LoginScreen = () => {
         mode="contained"
         onPress={handleSubmit(onSubmit)}
         loading={isLoading}
-        disabled={isLoading}
+        disabled={isLoading || !isValid}
         style={{ marginTop: 24 }}
       >
         Login
